@@ -9,9 +9,10 @@ const queue = 'auth-requests';
 const AUTH_FAIL = new Error('Authentication failed.');
 
 
-const w = new Worker(queue, handle, {});
+const w = new Worker(queue, handle, { redis: { db: process.env.REQUEST_REDIS_DB, host: process.env.REQUEST_REDIS_HOST } });
 const r = redis.createClient({
-    host: process.env.TOKEN_REDIS_HOST
+    host: process.env.TOKEN_REDIS_HOST,
+    db: process.env.TOKEN_REDIS_DB
 });
 
 async function handle(data) {
