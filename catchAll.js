@@ -6,7 +6,7 @@ const validator = require('validator');
 /** A worker that catches all request, authenticates and then forwards to an internal queue */
 
 const queue = 'auth-requests';
-const AUTH_FAIL = new Error('Authentication failed.');
+const AUTH_ERROR = new Error('Authentication failed.');
 
 
 const w = new Worker(queue, handle, { redis: { db: process.env.REQUEST_REDIS_DB, host: process.env.REQUEST_REDIS_HOST } });
@@ -19,7 +19,7 @@ async function handle(data) {
     const token = data.token;
 
     if (!isValidUUID(token))
-        throw AUTH_FAIL;
+        throw AUTH_ERROR;
 
     const userId = await getUserId(token);
 
